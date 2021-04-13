@@ -60,23 +60,31 @@ class Invoker:
             return x
         log("> Enter a number of points: ", COLOR.OKGREEN)
         num_pts = int(input())
-        x = [random() * self.MAX_RANDOM_NUMBER for i in range(num_pts)]
+        log("> Enter interval [a, b]: ", COLOR.OKGREEN)
+        a, b = list(map(int, input().split()))
+        x = [random() * (b - a) + a for i in range(num_pts)]
         return x
     def draw(self, x, y_org, y_lag, chosen_func, lagrange):
-        fig, axs = plt.subplots(2)
-        for i in range(2):
+        _, axs = plt.subplots(3)
+        for i in range(3):
             axs[i].grid(True)
 
         x1 = np.arange(min(x) - 1, max(x) + 1, 0.1)
         y1_org = chosen_func.f(x1)
         y1_lag = [lagrange.f(xi) for xi in x1]
 
-        axs[0].plot(x1, y1_org, label = chosen_func.to_str(), ls = "dashed") 
+        axs[0].plot(x1, y1_org, label = chosen_func.to_str(), c = "green") 
         axs[0].scatter(x, y_org, marker = '.', color = 'r', s = 100)
         axs[0].legend(loc = "center left")
 
-        axs[1].plot(x1, y1_lag, label = "lagrange function", ls = "dashed")
+        axs[1].plot(x1, y1_lag, label = "lagrange function", c = "blue")
         axs[1].scatter(x, y_lag, marker = '.', color = 'r', s = 100)
         axs[1].legend(loc = "center left")
+
+        axs[2].plot(x1, y1_org, label = chosen_func.to_str(), c = "green")
+        axs[2].plot(x1, y1_lag, label = "lagrange function", c = "blue")
+        axs[2].scatter(x, y_org, marker = '.', color = 'r', s = 100)
+        axs[2].legend()
+
 
         plt.show()
